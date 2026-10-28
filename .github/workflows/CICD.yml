@@ -58,6 +58,8 @@ jobs:
       with:
         toolchain: ${{ needs.crate_metadata.outputs.msrv }}
         components: clippy
+    - name: Cache Rust build artifacts
+      uses: Swatinem/rust-cache@v2
     - name: Run clippy (on minimum supported rust version to prevent warnings we can't fix)
       run: cargo clippy --locked --all-targets ${{ env.MSRV_FEATURES }}
     - name: Run tests
@@ -103,6 +105,11 @@ jobs:
       uses: dtolnay/rust-toolchain@stable
       with:
         targets: ${{ matrix.job.target }}
+
+    - name: Cache Rust build artifacts
+      uses: Swatinem/rust-cache@v2
+      with:
+        key: ${{ matrix.job.target }}
 
     - name: Install cross
       if: matrix.job.use-cross
